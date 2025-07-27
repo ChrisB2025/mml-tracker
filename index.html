@@ -13,27 +13,6 @@
     })(window,document,'script','dataLayer','GTM-TJ6CW9SW');</script>
     <!-- End Google Tag Manager -->
     
-    <script>
-        // Get the target page from URL parameter
-        function getPageParam() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('page') || '23c1c7745a3880168e4ce0fcd6c194d8';
-        }
-        
-        // Redirect after tracking
-        window.onload = function() {
-            const pageId = getPageParam();
-            gtag('event', 'page_view', {
-                'page_title': 'MML UK Campaign',
-                'page_location': window.location.href
-            });
-            
-            setTimeout(() => {
-                window.location.href = `https://mmluk.notion.site/${pageId}`;
-            }, 300);
-        }
-    </script>
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -72,6 +51,64 @@
         <div class="spinner"></div>
         <h2>Loading MML UK Campaign...</h2>
         <p>Redirecting to campaign materials</p>
+        <p><small id="debug"></small></p>
     </div>
+
+    <script>
+        // Debug function
+        function debug(message) {
+            console.log(message);
+            document.getElementById('debug').innerText = message;
+        }
+        
+        // Get page parameter from URL
+        function getPageId() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const pageId = params.get('page');
+                debug('Page parameter: ' + (pageId || 'none'));
+                return pageId || '23c1c7745a3880168e4ce0fcd6c194d8';
+            } catch(e) {
+                debug('Error getting page: ' + e.message);
+                return '23c1c7745a3880168e4ce0fcd6c194d8';
+            }
+        }
+        
+        // Redirect function
+        function redirect() {
+            try {
+                const pageId = getPageId();
+                const targetUrl = 'https://mmluk.notion.site/' + pageId;
+                debug('Redirecting to: ' + targetUrl);
+                
+                // Use both methods for better compatibility
+                window.location.href = targetUrl;
+                window.location.replace(targetUrl);
+                
+            } catch(e) {
+                debug('Redirect error: ' + e.message);
+                // Fallback to main page
+                window.location.href = 'https://mmluk.notion.site/23c1c7745a3880168e4ce0fcd6c194d8';
+            }
+        }
+        
+        // Start redirect after page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debug('Page loaded, starting redirect...');
+            setTimeout(redirect, 1000); // 1 second delay
+        });
+        
+        // Fallback if DOMContentLoaded doesn't fire
+        window.onload = function() {
+            debug('Window loaded');
+            setTimeout(redirect, 1500);
+        };
+        
+        // Emergency fallback
+        setTimeout(function() {
+            debug('Emergency fallback triggered');
+            window.location.href = 'https://mmluk.notion.site/23c1c7745a3880168e4ce0fcd6c194d8';
+        }, 5000);
+    </script>
 </body>
 </html>
